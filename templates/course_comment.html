@@ -1,0 +1,83 @@
+{% extends 'base.html' %} {% block title %}course_comment{% endblock %} {% block custom_content %}
+<div class="container">
+    <div class="jumbotron" style="background-color: #222">
+        <h1 style="color: #fff;">{{ course.name }}</h1>
+        <p style="color: #fff;">讲师：{{ course.teacher }}</p>
+        <p style="color: #fff;">收藏人数：{{ course.fav_nums }}</p>
+        <p style="color: #fff;">
+            <a class="btn btn-primary btn-lg" role="button">
+                收藏课程</a>
+        </p>
+    </div>
+</div>
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-12">
+            <form role="form">
+                <div class="form-group">
+                    <label for="name">评论区：</label>
+                    <textarea id='comment_textarea' class="form-control" rows="7"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+            <div class="col-md-1 pull-right">
+                <button id='submit_comment' type="button" class="btn btn-primary">发表评论</button>
+            </div>
+        </div>
+    <hr style="filter: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color="#6f5499" size="5" />
+    <div class="row">
+        <ul class="breadcrumb">
+            <li>
+                <a href="" class="myfont" style="font-weight: bolder;font-style: italic">评论列表</a>
+            </li>
+        </ul>
+    </div>
+    {% for user_comment in all_comments %}
+    <div class="row">
+        <div class="row">
+            <div class="panel panel-default" style="margin-top: 10px">
+                <div class="panel-heading">
+                    <img src="{{ MEDIA_URL }}{{ user_comment.user.image }}" class="img-rounded" alt="Cinque Terre" width="40" height="40">
+                    <span class="label label-success">{{ user_comment.user.username }}</span>
+                </div>
+                <div class="panel-body">
+                    {{ user_comment.comments }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript">
+    //添加评论
+    $('#submit_comment').on('click', function(){
+        var comments = $("#comment_textarea").val()
+        if(comments == ""){
+            alert("评论不能为空")
+            return
+        }
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url:"{% url 'courses:add_comment' %}",
+            data:{'course_id':{{ course.id }}, 'comments': comments},
+            async: true,
+            beforeSend:function(xhr, settings){
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function(data) {
+                if(data.status == 'fail'){
+                    alert(data.msg)
+                }else if(data.status == 'success'){
+                    window.location.reload();//刷新当前页面.
+                }
+            },
+        });
+    });
+
+</script>
+{% endblock %}

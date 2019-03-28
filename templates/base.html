@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{% block title %}hustle-index{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    {% block custom_css %}{% endblock %}
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <strong style="font-size: 30px;color: #fff;">Hustle</strong>
+            </a>
+            <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myCollapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div id="myCollapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li id='index'>
+                    <a href="{% url 'index' %}">首页</a>
+                </li>
+                <li id='course'>
+                    <a href="{% url 'courses:courses_list' %}">课程</a>
+                </li>
+                <li id='lecturer'>
+                    <a href="{% url 'teacher' %}">讲师</a>
+                </li>
+                <li id='colleges'>
+                    <a href="{% url 'colleges:colleges_list' %}">学院</a>
+                </li>
+            </ul>
+            {% if request.user.is_authenticated %}
+            <ul class="nav navbar-nav pull-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img class="img-circle" src="/static/images/la.jpg" style="width: 23px;height: 23px;" />
+                        <span style="font-size: 15px">
+                            <i>username</i>
+                        </span>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">个人中心</a>
+
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">退出登陆</a>
+                            </li>
+                        </ul>
+                    </a>
+                </li>
+            </ul>
+            {% else %}
+            <ul class="nav navbar-nav pull-right">
+                <li>
+                    <a data-toggle="modal" data-target="#myModal">
+                        <span class="glyphicon glyphicon-log-in"></span> 登陆</a>
+                </li>
+                <li>
+                    <a data-toggle="modal" data-target="#myModal2">
+                        <span class="glyphicon glyphicon-user"></span> 加入</a>
+                </li>
+            </ul>
+            {% endif %}
+            <div class="row" style='margin-top: 10px'>
+                <div class="col-lg-3">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button id="search" type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown" data-value="course">
+                                <span>课程</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" id="search_menu">
+                                <li data-value="course">
+                                    <a>课程</a>
+                                </li>
+                                <li data-value="lecturer">
+                                    <a>讲师</a>
+                                </li>
+                                <li data-value="college">
+                                    <a>学院</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <input type="text" id="search_keywords" class="form-control" placeholder="请输入搜索内容" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block custom_content %}{% endblock %}
+    
+        <div class="footer">
+            <p>&copy; Company 2012</p>
+        </div>
+    
+    <!--登陆模态框-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align: center">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">登陆</h4>
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <div class="center-block" style="width:500px;">
+                        <form class="form-horizontal" method="post" action="{% url 'login'%}">
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control center-block" autofocus="autofocus"
+                                        required="required" name="account" placeholder="账号"
+                                        value="{{ login_form.account.value }}">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control center-block" required="required"
+                                        name="password" placeholder="密码" value="{{ login_form.password.value }}">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-sm-8">
+                                    {% for key,error in login_form.errors.items %}{{ key }}:{{ error }}{% endfor %}{{ msg }}
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-md-4">
+                                    <input class="btn btn-primary btn-block" style="width: 236.66px" type="submit"
+                                        value="登陆">
+                                </div>
+                            </div>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--注册模态框-->
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align: center">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">注册</h4>
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <div class="center-block" style="width:500px;">
+                        <form class="form-horizontal" method="post" action="{% url 'register'%}">
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control center-block" autofocus="autofocus"
+                                        required="required" name="account" placeholder="账号"
+                                        value="{{ register_form.account.value }}">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control center-block" required="required"
+                                        name="password" placeholder="密码" value="{{ register_form.password.value }}">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control center-block" required="required"
+                                        name="confirm_password" placeholder="确认密码"
+                                        value="{{ register_form.confirm_password.value }}">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-sm-8">
+                                    {% for key,error in register_form.errors.items %}{{ key }}:{{ error }}{% endfor %}{{msg }}
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 115px">
+                                <div class="col-md-4">
+                                    <input class="btn btn-primary btn-block" style="width: 236.66px" type="submit"
+                                        value="注册">
+                                </div>
+                            </div>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+    <script type="text/javascript">
+        // 导航栏搜索框切换
+        var menu = document.getElementById('search_menu');
+        var search = document.getElementById('search');
+        menu.addEventListener('click', function (e) {
+            search.children[0].innerText = e.target.innerText;
+            console.log(e.target.parentElement.dataset.value)
+            search.dataset.value = e.target.parentElement.dataset.value
+            console.log('search value', search.dataset.value)
+        }, false)
+        // 导航栏个人头像信息
+        $(function () {
+            $(".dropdown").mouseover(function () {
+                $(this).addClass("open");
+            });
+            $(".dropdown").mouseleave(function () {
+                $(this).removeClass("open");
+            });
+        })
+        // 导航栏搜索框
+        function search_click() {
+            // console.log('excute')
+            // debugger
+            var type = $('#search').attr('data-value'),
+                keywords = $('#search_keywords').val(),
+                request_url = ''
+            // debugger
+            if (keywords == "") {
+                return ''
+            }
+            if (type == "course") {
+                request_url = "courses/list?keywords=" + keywords
+            } else if (type == "lecturer") {
+                request_url = "lecturer/list?keywords=" + keywords
+            } else if (type == "college") {
+                request_url = "colleges/list?keywords=" + keywords
+            }
+            window.location.href = "{% url 'index' %}" + request_url;
+        }
+        // console.log('input', $('#search_keywords'))
+        $('#search_keywords').keydown(function (event) {
+            // console.log(event.keyCode)
+            //debugger
+            if (event.keyCode == "13") {
+                search_click()
+            }
+        });
+    </script>
+    {% if login_form.errors or msg or register_form.errors%}
+    <script>
+        window.onload = function () {
+            $('#myModal').modal('show')
+            // 若需要手动隐藏则调用
+            // $('#myModal').modal('hide')
+        }
+    </script>
+    {% endif %} {% block custom_js %}{% endblock %}
+</body>
+
+</html>

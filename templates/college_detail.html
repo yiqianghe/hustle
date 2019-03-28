@@ -1,0 +1,97 @@
+{% extends 'base.html' %} {% block title %}college_detail{% endblock %} {% block custom_content %}
+<div class="jumbotron" style="background: #222;margin-top: 50px">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9 col-sm-12 col-xs-12">
+                <h1 style="color: #fff;">{{ college_org.name }}</h1>
+                <p style="color: #fff;">{{ lecturers_counts }}名讲师</p>
+                <p style="color: #fff;">{{ courses_counts }}门课程</p>
+                <button type="button" class="btn btn-primary btn-lg collectionbtn">{% if has_fav %}已{% endif %}收藏学院</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <ul class="breadcrumb">
+            <li>
+                <a href="{% url 'colleges:college_home' college_id 'lecturer' %}" class="myfont"
+                    {% if all_lecturers %}style="font-weight: bolder;font-style: italic" {% endif %}>讲师</a>
+            </li>
+            <li>
+                <a href="{% url 'colleges:college_home' college_id 'course' %}" class="myfont"
+                    {% if all_courses %}style="font-weight: bolder;font-style: italic" {% endif %}>课程</a>
+            </li>
+        </ul>
+    </div>
+    <hr style="filter: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color="#6f5499" size="5" />
+    {% if all_courses %}
+    {% for course in all_courses %}
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <div class="thumbnail">
+                <img src="{{ MEDIA_URL}}{{ course.image }}">
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-6 col-xs-6">
+            <a href="{% url 'colleges:college_course' college_org.id 'course' course.id %}">
+                <h2>{{ course.name }}</h2>
+            </a>
+            <p class="lead">{{ course.desc }}</p>
+
+        </div>
+    </div>
+    <hr style="filter: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color="#6f5499" size="5" />
+    {% endfor %}
+    {% elif all_lecturers %}
+    {% for lecturer in all_lecturers %}
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <img src="{{ MEDIA_URL}}{{ lecturer.image }}" class="img-circle" alt="Cinque Terre" width="150"
+                height="150">
+        </div>
+        <div class="col-md-9 col-sm-6 col-xs-6">
+            <a href="{% url 'colleges:college_lecturer' lecturer.id %}">
+                <h2>{{ lecturer.name }}</h2>
+            </a>
+            <p class="lead">教学特点：{{ lecturer.points }}</p>
+            <p class="lead">工作年限：{{ lecturer.work_years }}</p>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+</div>
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript">
+    //收藏分享
+    function add_fav(current_elem, fav_id, fav_type) {
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "{% url 'colleges:add_fav' %}",
+            data: {
+                'fav_id': fav_id,
+                'fav_type': fav_type
+            },
+            async: true,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (data) {
+                if (data.status == 'fail') {
+                    //window.location.href = "/login/";
+                    alert(data.msg)
+                } else if (data.status == 'success') {
+                    current_elem.text(data.msg)
+                }
+            },
+        });
+    }
+
+    $('.collectionbtn').on('click', function () {
+        add_fav($(this), {{ college_id }}, 3);
+        });
+</script>
+{% endblock %}

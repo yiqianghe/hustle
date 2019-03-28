@@ -1,0 +1,79 @@
+{% extends 'base.html' %} {% block title %}courses_index.html{% endblock %}
+{% block custom_content %}
+<div class="jumbotron" style="background: #222; margin-top: 50px">
+
+    <div class="container">
+        <h1 style="color: #fff;">{{ courses_count }}门课程</h1>
+    </div>
+
+</div>
+<div class="container">
+    <div class="row">
+        <ul class="breadcrumb">
+            <li class="myfont">
+                课程列表
+            </li>
+        </ul>
+    </div>
+    <hr style="filter: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color="#6f5499" size="5" />
+    {% for course in all_courses.object_list %}
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <div class="thumbnail">
+                <img src="{{ MEDIA_URL}}{{ course.image }}">
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-6 col-xs-6">
+            <div class="row">
+                <a href="{% url 'courses:course_detail' course.id%}">
+                    <h2>{{ course.name }}</h2>
+                </a>
+                <p class="lead">课程描述：{{ course.desc }}</p>
+            </div>
+            <div class="row">
+                <p>讲师：{{ course.teacher }}</p>
+            </div>
+            <div class="row">
+                <p>学院：{{ course.college_org }}</p>
+            </div>
+        </div>
+    </div>
+    <hr style="filter: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color="#6f5499" size="5" />
+    {% endfor %}
+</div>
+<ul class="pager">
+    {% if all_courses.has_previous %}
+    <li>
+        <a href="?{{ all_courses.previous_page_number.querystring }}" style="color: #222">previous</a>
+    </li>
+    {% endif %}
+    {% for page in all_courses.pages %}
+    {% if page %}
+    {% ifequal page all_courses.number %}
+    <li class="active">
+        <a href="" style="color: #222">{{ page }}</a>
+    </li>
+    {% else %}
+    <li>
+        <a href="?{{ page.querystring }}" style="color: #222">{{ page }}</a>
+    </li>
+    {% endifequal %}
+    {% else %}
+    <li>
+        <a href="" style="color: #222">...</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+    {% if all_courses.has_next %}
+    <li>
+        <a href="?{{ all_courses.next_page_number.querystring }}" style="color: #222">next</a>
+    </li>
+    {% endif %}
+</ul>{% endblock %}
+
+{% block custom_js %}
+<script>
+    var el = document.getElementById('course');
+    el.setAttribute('class', 'active');
+</script>
+{% endblock %}

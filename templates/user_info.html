@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}user_info{% endblock %}
+{% block custom_content %}
+<div class='row' style='margin-bottom:50px;margin-top: 50px;'>
+    <div class="col-md-2">
+        <ul class="nav" style="padding: 50px 0;font-weight: bolder;font-size: 25px">
+            <li>
+                <a href="">我的设置</a>
+            </li>
+            <li>
+                <a href="">我的收藏</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-5" style='margin-top:50px'>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    基本信息
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="account">账号</label>
+                                <input type="text" class="form-control" id="account" disabled="disabled" value="123">
+                            </div>
+                            <div class="form-group">
+                                <label for="nick_name">昵称</label>
+                                <input type="text" class="form-control" id="nick_name" value='345'>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">邮箱</label>
+                                <input type="email" class="form-control" id="email" value='345'>
+                            </div>
+                            <div class="form-group">
+                                <label for="grade">班级</label>
+                                <input type="text" class="form-control" id="grade" value='345'>
+                            </div>
+                            <div class="form-group">
+                                <label for="number">号码</label>
+                                <input type="text" class="form-control" id="number" value='345'>
+                            </div>
+                            <div class="form-group">
+                                <label for="nick_name">性别</label><br>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosinline" id="gender" value="male">男
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="optionsRadiosinline" id="gender" value="female">女
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-default">提交更改</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" style='margin-top:50px'>
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        修改头像
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="image">头像</label>
+                            <img id='changeImage' src="/static/images/la.jpg" class="img-circle" alt="Cinque Terre"
+                                width="150" height="150" style="padding: 10px">
+
+                            <input type="file" id="inputfile">
+                        </div>
+                        <button type="submit" class="btn btn-default">提交更改</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 42px">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        修改密码
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input type="password" class="form-control" id="password" value=''>
+                        </div>
+                        <button type="submit" class="btn btn-default">提交更改</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js %}
+<script>
+    $("#inputfile").change(function (e) {
+        for (var i = 0; i < e.target.files.length; i++) {
+            var file = e.target.files.item(i);
+            var freader = new FileReader();
+            freader.readAsDataURL(file);
+            freader.onload = function (e) {
+                var src = e.target.result;
+                $("#changeImage").attr("src", src);
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %} {% block title %}lecturer_detail{% endblock %}
+{% block custom_content %}
+<div class="jumbotron" style="background: #222;margin-top: 50px">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9 col-sm-12 col-xs-12">
+                <h1 style="color: #fff;">{{ lecturer.name }}</h1>
+                <p style="color: #fff;">所属学院：{{ lecturer.college_org }}</p>
+                <p style="color: #fff;">课程数：{{ lecturer.get_course_counts }}</p>
+                <p style="color: #fff;">教学特点：{{ lecturer.point }}</p>
+                <p style="color: #fff;">办公地址：{{ lecturer.address }}</p>
+                <button type="button" class="btn btn-primary btn-lg collectionbtn">{% if has_fav %}已{% endif %}收藏讲师</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <ul class="breadcrumb">
+            <li class="myfont">
+                课程列表
+            </li>
+        </ul>
+    </div>
+    <hr style="filter: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color="#6f5499" size="5" />
+    {% for course in all_courses %}
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <div class="thumbnail">
+                <img src="{{ MEDIA_URL}}{{ course.image }}">
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-6 col-xs-6">
+            <a href="{% url 'teacher_course' course.id %}">
+                <h2>{{ course.name }}</h2>
+            </a>
+            <p class="lead">课程描述：{{ course.desc }}</p>
+
+        </div>
+    </div>
+    <hr style="filter: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color="#6f5499" size="5" />
+    {% endfor %}
+</div>
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript">
+    //收藏分享
+    function add_fav(current_elem, fav_id, fav_type) {
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "{% url 'add_fav_lecturer' %}",
+            data: {
+                'fav_id': fav_id,
+                'fav_type': fav_type
+            },
+            async: true,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (data) {
+                if (data.status == 'fail') {
+                    //window.location.href = "/login/";
+                    alert(data.msg)
+                } else if (data.status == 'success') {
+                    current_elem.text(data.msg)
+                }
+            },
+        });
+    }
+
+    $('.collectionbtn').on('click', function () {
+        add_fav($(this), {{ lecturer.id }}, 2);
+        });
+</script>
+{% endblock %}
