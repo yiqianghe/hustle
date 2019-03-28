@@ -4,12 +4,12 @@
 {% block custom_content %}
 <div class='row' style='margin-bottom:50px;margin-top: 50px;'>
     <div class="col-md-2">
-        <ul class="nav" style="padding: 50px 0;font-weight: bolder;font-size: 25px">
-            <li>
-                <a href="">我的设置</a>
+        <ul class="nav" style="padding: 50px 0;font-size: 25px">
+            <li style="font-weight: bolder;">
+                <a href="{% url 'users:users_center' %}">我的设置</a>
             </li>
             <li>
-                <a href="">我的收藏</a>
+                <a href="{% url 'users:users_fav' %}">我的收藏</a>
             </li>
         </ul>
     </div>
@@ -23,37 +23,39 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <form role="form">
-                            <div class="form-group">
+                    <div class="form-group">
                                 <label for="account">账号</label>
-                                <input type="text" class="form-control" id="account" disabled="disabled" value="123">
+                                <input type="text" class="form-control" id="account" disabled="disabled" name='username' value="{{ request.user.username }}">
                             </div>
+                        <form role="form" method='POST' action="{% url 'users:users_center' %}">
+
                             <div class="form-group">
                                 <label for="nick_name">昵称</label>
-                                <input type="text" class="form-control" id="nick_name" value='345'>
+                                <input type="text" class="form-control" id="nick_name" name='nick_name' value='{{ request.user.nick_name }}'>
                             </div>
                             <div class="form-group">
                                 <label for="email">邮箱</label>
-                                <input type="email" class="form-control" id="email" value='345'>
+                                <input type="email" class="form-control" id="email" name='email' value='{{ request.user.email }}'>
                             </div>
                             <div class="form-group">
                                 <label for="grade">班级</label>
-                                <input type="text" class="form-control" id="grade" value='345'>
+                                <input type="text" class="form-control" id="grade" name='grade' value='{{ request.user.grade }}'>
                             </div>
                             <div class="form-group">
-                                <label for="number">号码</label>
-                                <input type="text" class="form-control" id="number" value='345'>
+                                <label for="mobile">号码</label>
+                                <input type="text" class="form-control" id="mobile" name='mobile' value='{{ request.user.mobile }}'>
                             </div>
                             <div class="form-group">
                                 <label for="nick_name">性别</label><br>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosinline" id="gender" value="male">男
+                                    <input type="radio" id="gender" name='gender' value="male" {% ifequal request.user.gender 'male' %}checked{% endifequal %}>男
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosinline" id="gender" value="female">女
+                                    <input type="radio" id="gender" name='gender' value="female" {% ifequal request.user.gender 'fmale' %}checked{% endifequal %}>女
                                 </label>
                             </div>
                             <button type="submit" class="btn btn-default">提交更改</button>
+                        {% csrf_token %}
                         </form>
                     </div>
                 </div>
@@ -69,15 +71,16 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <form role="form">
+                    <form role="form" id="AvatarForm" method='POST' enctype="multipart/form-data" action="{% url 'users:image_upload' %}">
                         <div class="form-group">
                             <label for="image">头像</label>
-                            <img id='changeImage' src="/static/images/la.jpg" class="img-circle" alt="Cinque Terre"
+                            <img id='changeImage' src="{{ MEDIA_URL }}{{ request.user.image }}" class="img-circle" alt="Cinque Terre"
                                 width="150" height="150" style="padding: 10px">
 
-                            <input type="file" id="inputfile">
+                            <input type="file" id="inputfile" name="image">
                         </div>
                         <button type="submit" class="btn btn-default">提交更改</button>
+                        {% csrf_token %}
                     </form>
                 </div>
             </div>
@@ -90,12 +93,17 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <form role="form">
+                    <form id='PwdForm'>
                         <div class="form-group">
                             <label for="password">密码</label>
-                            <input type="password" class="form-control" id="password" value=''>
+                            <input type="password" class="form-control" id="password" name='password' value=''>
                         </div>
-                        <button type="submit" class="btn btn-default">提交更改</button>
+                        <div class="form-group">
+                            <label for="confirm_password">确认密码</label>
+                            <input type="password" class="form-control" id="confirm_password" name='confirm_password' value=''>
+                        </div>
+                        <button type="button" id='update_pwd' class="btn btn-default">提交更改</button>
+                        {% csrf_token %}
                     </form>
                 </div>
             </div>
@@ -115,6 +123,29 @@
                 $("#changeImage").attr("src", src);
             }
         }
+    });
+
+
+    $('#update_pwd').click(function(){
+        $.ajax({
+            cache: false,
+            type: "POST",
+            dataType:'json',
+            url:"{% url 'users:update_pwd' %}",
+            data:$('#PwdForm').serialize(),
+            async: true,
+            success: function(data) {
+                if (data.password) {
+                    alert(data.password);
+                } else if (data.confirm_password) {
+                    alert(data.confirm_password);
+                } else if (data.status == "success") {
+                    alert('修改密码成功，请重新登录!');
+                } else if (data.msg) {
+                    alert(data.msg);
+                }
+            }
+        });
     });
 </script>
 {% endblock %}

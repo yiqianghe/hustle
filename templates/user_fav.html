@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}user_info{% endblock %}
+{% block custom_content %}
+<div class='row' style='margin-bottom:50px;margin-top: 50px;'>
+    <div class="col-md-2">
+        <ul class="nav" style="padding: 50px 0;font-size: 25px">
+            <li>
+                <a href="{% url 'users:users_center' %}">我的设置</a>
+            </li>
+            <li style="font-weight: bolder;">
+                <a href="{% url 'users:users_fav' %}">我的收藏</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-10" style='margin-top:50px'>
+        <div class="row">
+
+        <ul class="breadcrumb">
+            <li class="myfont">
+                教师列表
+            </li>
+        </ul>
+
+            {% for course in all_courses %}
+            <div class="col-sm-6 col-md-3">
+            <div class="thumbnail">
+                <img src="{{ MEDIA_URL }}{{ course.image }}">
+                <div class="caption">
+                    <h3>{{ course.name }}</h3>
+                    <p>{{ course.desc }}</p>
+                    <p>
+                        <a href="#" class="btn btn-primary" role="button">
+                            开始学习
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+        <div class="row">
+        <ul class="breadcrumb">
+            <li class="myfont">
+                讲师列表
+            </li>
+        </ul>
+        {% for lecturer in all_lecturers %}
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="hovereffect">
+                <img class="img-responsive" src="{{ MEDIA_URL }}{{ lecturer.image }}" alt="">
+                <div class="overlay">
+                    <p>
+                        <a href="#">{{ lecturer.name }}</a>
+                    </p>
+                    <h3 style="color: #fff">{{ lecturer.points }}</h3>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        <div class="row" style="margin-top: 5px">
+        <ul class="breadcrumb">
+            <li class="myfont">
+                学院列表
+            </li>
+        </ul>
+        {% for college in all_colleges %}
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="hovereffect">
+                <img class="img-responsive" src="{{ MEDIA_URL }}{{ college.image }}" alt="">
+                <div class="overlay">
+                    <p>
+                        <a href="#">{{ college.name }}</a>
+                    </p>
+                    <h3 style="color: #fff">{{ college.desc }}</h3>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js %}
+<script>
+    $("#inputfile").change(function (e) {
+        for (var i = 0; i < e.target.files.length; i++) {
+            var file = e.target.files.item(i);
+            var freader = new FileReader();
+            freader.readAsDataURL(file);
+            freader.onload = function (e) {
+                var src = e.target.result;
+                $("#changeImage").attr("src", src);
+            }
+        }
+    });
+
+
+    $('#update_pwd').click(function(){
+        $.ajax({
+            cache: false,
+            type: "POST",
+            dataType:'json',
+            url:"{% url 'users:update_pwd' %}",
+            data:$('#PwdForm').serialize(),
+            async: true,
+            success: function(data) {
+                if (data.password) {
+                    alert(data.password);
+                } else if (data.confirm_password) {
+                    alert(data.confirm_password);
+                } else if (data.status == "success") {
+                    alert('修改密码成功，请重新登录!');
+                } else if (data.msg) {
+                    alert(data.msg);
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -22,3 +22,20 @@ class RegisterForm(forms.Form):
             pass
         else:
             raise forms.ValidationError("两次密码输入不一致")
+
+
+class UploadImageForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['image']
+
+
+class ModifyPwdForm(forms.Form):
+    password = forms.CharField(required=True, min_length=8)
+    confirm_password = forms.CharField(required=True, min_length=8)
+
+
+class UserInfoForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['nick_name', 'email', 'grade', 'mobile', 'gender']

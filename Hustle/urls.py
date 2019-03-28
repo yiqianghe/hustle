@@ -17,11 +17,11 @@ from django.contrib import admin
 from django.urls import path, re_path
 import xadmin
 from django.views.generic import TemplateView
-from users.views import LoginView, RegisterView,UserInfoView
+from users.views import LoginView, RegisterView,LogoutView
 from colleges.views import LecturerView,LecturerDetailView,AddFavView
 from courses.views import CourseDetailView
 from django.views.static import serve
-from Hustle.settings import MEDIA_ROOT
+from Hustle.settings import MEDIA_ROOT,STATIC_ROOT
 from django.urls import include
 
 
@@ -31,6 +31,8 @@ urlpatterns = [
     path('', LoginView.as_view(), name="index"),
     # 登陆
     path('login/', LoginView.as_view(), name='login'),
+    # 注销
+    path('logout/', LogoutView.as_view(), name='logout'),
     # 注册
     path('register/', RegisterView.as_view(), name='register'),
 
@@ -48,5 +50,12 @@ urlpatterns = [
     path('lecturer/course/<int:course_id>', CourseDetailView.as_view(), name='teacher_course'),
     # 配置上传文件访问函数
     re_path('media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
-    path('user/', UserInfoView.as_view(), name='user'),
+    # 配置静态文件访问函数
+    re_path('static/(?P<path>.*)',  serve, {"document_root":STATIC_ROOT}),
+    # 配置用户
+    path('users/', include(('users.urls', 'users'), namespace='users')),
 ]
+
+#全局404页面配置
+handler404 = 'users.views.page_not_found'
+handler500 = 'users.views.page_error'

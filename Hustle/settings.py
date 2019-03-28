@@ -25,9 +25,9 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 SECRET_KEY = 'x1z8$3g&@b_=rhkq2j=taitm22agv#0!-ydck4)+k&g9vx4b(('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # 自定义认证
 AUTHENTICATION_BACKENDS = (
@@ -138,10 +138,11 @@ USE_TZ = False  # 数据库存储时间
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-# 静态路径
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+# # 静态路径
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')

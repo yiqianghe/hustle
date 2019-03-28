@@ -41,11 +41,6 @@
                 <div class="caption">
                     <h3>{{ course.name }}</h3>
                     <p>{{ course.desc }}</p>
-                    <p>
-                        <a href="#" class="btn btn-primary" role="button">
-                            开始学习
-                        </a>
-                    </p>
                 </div>
             </div>
         </div>
@@ -88,7 +83,7 @@
         <h3 class="glyphicon glyphicon-th-list"></h3>
         <h3>&nbsp;学&nbsp;院&nbsp;机&nbsp;构&nbsp;</h3>
     </div>
-    <div class="row" style="margin-top: 5px">
+    <div class="row">
         {% for college in all_colleges %}
         <div class="col-md-3 col-sm-6 col-xs-12">
             <div class="hovereffect">
@@ -97,7 +92,7 @@
                     <p>
                         <a href="#">{{ college.name }}</a>
                     </p>
-                    <h3 style="color: #fff">{{ college.desc }}</h3>
+                    <h5 style="color: #fff">{{ college.desc }}</h5>
                 </div>
             </div>
         </div>
