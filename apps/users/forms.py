@@ -1,5 +1,6 @@
 from django import forms
 from .models import UserProfile
+from courses.models import Video
 
 class LoginForm(forms.Form):
     account = forms.CharField(required=True)
@@ -8,6 +9,8 @@ class LoginForm(forms.Form):
 
 class RegisterForm(forms.Form):
     account = forms.CharField(required=True, min_length=5)
+    college = forms.CharField(required=True)
+    is_lecturer = forms.CharField(required=True)
     password = forms.CharField(required=True, min_length=8)
     confirm_password = forms.CharField(required=True, min_length=8)
 
@@ -28,6 +31,22 @@ class UploadImageForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['image']
+
+
+class UploadVideoForm(forms.Form):
+    lesson = forms.CharField(required=True)
+    name = forms.CharField(required=True)
+    video_file = forms.FileField()
+
+
+class CreateCourseForm(forms.Form):
+    name = forms.CharField(required=True)
+    image = forms.ImageField(required=True)
+
+
+class CreateLessonForm(forms.Form):
+    course = forms.CharField(required=True)
+    name = forms.CharField(required=True)
 
 
 class ModifyPwdForm(forms.Form):

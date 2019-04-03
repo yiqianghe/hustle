@@ -15,12 +15,12 @@
     <div class="row">
         <ul class="breadcrumb">
             <li>
-                <a href="" class="myfont"
-                    {% if all_lecturers %}style="font-weight: bolder;font-style: italic" {% endif %}>章节</a>
+                <b><a href="" class="myfont"
+                    {% if all_lecturers %}{% endif %}>章节</a></b>
             </li>
             <li>
                 <a href="{% url 'courses:course_comment' course.id %}" class="myfont"
-                    {% if all_lecturers %}style="font-weight: bolder;font-style: italic" {% endif %}>评论</a>
+                    {% if all_lecturers %} {% endif %}>评论</a>
             </li>
         </ul>
     </div>
@@ -42,12 +42,14 @@
                 {% endfor %}
             </ul>
         </div>
+        {% if current_video %}
         <div class="col-md-10">
                 <video id='my-video' class='video-js' controls preload='auto' width='950' height='420'
-                poster='/static/images/teacher_bck.jpg' data-setup='{}'>
-                  <source src='{{ current_video.url }}' type='video/mp4'>
+                poster='{{ MEDIA_URL }}{{ course.image }}' data-setup='{}'>
+                  <source src='{% if current_video.video_file %}{{ MEDIA_URL }}{{ current_video.video_file }}{% else %}{{ current_video.url }}{% endif %}' type='video/mp4'>
                 </video>
         </div>
+        {% endif %}
     </div>
 </div>
 

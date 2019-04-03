@@ -15,11 +15,11 @@
     <div class="row">
         <ul class="breadcrumb">
             <li>
-                <a href="{% url 'colleges:college_home' college_id 'lecturer' %}" class="myfont"
+                <a href="{% url 'colleges:college_detail' college_id 'lecturer' %}" class="myfont"
                     {% if all_lecturers %}style="font-weight: bolder;font-style: italic" {% endif %}>讲师</a>
             </li>
             <li>
-                <a href="{% url 'colleges:college_home' college_id 'course' %}" class="myfont"
+                <a href="{% url 'colleges:college_detail' college_id 'course' %}" class="myfont"
                     {% if all_courses %}style="font-weight: bolder;font-style: italic" {% endif %}>课程</a>
             </li>
         </ul>
@@ -65,7 +65,7 @@
 {% endblock %}
 {% block custom_js %}
 <script type="text/javascript">
-    //收藏分享
+    //收藏
     function add_fav(current_elem, fav_id, fav_type) {
         $.ajax({
             cache: false,

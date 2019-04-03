@@ -21,7 +21,7 @@ from users.views import LoginView, RegisterView,LogoutView
 from colleges.views import LecturerView,LecturerDetailView,AddFavView
 from courses.views import CourseDetailView
 from django.views.static import serve
-from Hustle.settings import MEDIA_ROOT,STATIC_ROOT
+from Hustle.settings import MEDIA_ROOT
 from django.urls import include
 
 
@@ -51,7 +51,7 @@ urlpatterns = [
     # 配置上传文件访问函数
     re_path('media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
     # 配置静态文件访问函数
-    re_path('static/(?P<path>.*)',  serve, {"document_root":STATIC_ROOT}),
+    # re_path('static/(?P<path>.*)',  serve, {"document_root":STATIC_ROOT}),
     # 配置用户
     path('users/', include(('users.urls', 'users'), namespace='users')),
 ]

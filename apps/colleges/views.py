@@ -9,7 +9,9 @@ from django.db.models import Q
 
 
 class CollegesView(View):
-    """学院机构列表"""
+    """学院机构列表
+    """
+
     @classmethod
     def get(cls, request):
         all_colleges = CollegeOrg.objects.all()
@@ -36,7 +38,8 @@ class CollegesView(View):
 
 
 class CollegeHomeView(View):
-    """学院详情"""
+    """学院详情
+    """
 
     @classmethod
     def get(cls, request, college_id, get_type):
@@ -70,7 +73,8 @@ class CollegeHomeView(View):
 
 
 class CollegeCourseView(View):
-    """学院课程详情"""
+    """学院课程详情
+    """
 
     @classmethod
     def get(cls, request, _college_id, _get_type, course_id):
@@ -83,7 +87,8 @@ class CollegeCourseView(View):
 
 
 class AddFavView(View):
-    """用户收藏"""
+    """用户收藏
+    """
 
     @classmethod
     def post(cls, request):
@@ -111,7 +116,8 @@ class AddFavView(View):
 
 
 class LecturerView(View):
-    """讲师列表"""
+    """讲师列表
+    """
 
     @classmethod
     def get(cls, request):
@@ -138,7 +144,8 @@ class LecturerView(View):
 
 
 class LecturerDetailView(View):
-    """讲师详情"""
+    """讲师详情
+    """
 
     @classmethod
     def get(cls, request, lecturer_id):

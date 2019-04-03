@@ -8,7 +8,8 @@ from django.db.models import Q
 
 
 class CourseListView(View):
-    """课程列表"""
+    """课程列表
+    """
 
     @classmethod
     def get(cls, request):
@@ -36,13 +37,12 @@ class CourseListView(View):
 
 
 class CourseDetailView(View):
-    """课程详情"""
+    """课程详情
+    """
 
     @classmethod
     def get(cls, request, course_id):
         course = Course.objects.get(id=int(course_id))
-        first_lesson = course.lesson_set.all()[0]
-        current_video = first_lesson.video_set.all()[0]
         has_fav = False
         if request.user.is_authenticated:
             if UserFavorite.objects.filter(user=request.user, fav_id=int(course_id), fav_type=1):
@@ -50,28 +50,34 @@ class CourseDetailView(View):
         return render(request, 'course_detail.html',
                       {
                           'course': course,
-                          'first_video': current_video,
                           'has_fav': has_fav,
                       })
 
 
 class CourseVideoView(View):
-    """课程视频"""
+    """课程视频
+    """
 
     @classmethod
     def get(cls, request, course_id, lesson_id, video_id):
         course = Course.objects.get(id=int(course_id))
         current_lesson = course.lesson_set.get(id=int(lesson_id))
         current_video = current_lesson.video_set.get(id=int(video_id))
+        has_fav = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_id=int(course_id), fav_type=1):
+                has_fav = True
         return render(request, 'course_detail.html',
                       {
                           'course': course,
                           'current_video': current_video,
+                          'has_fav': has_fav,
                       })
 
 
 class CommentsView(View):
-    """课程评论"""
+    """课程评论
+    """
 
     @classmethod
     def get(cls, request, course_id):
@@ -84,7 +90,8 @@ class CommentsView(View):
 
 
 class AddCommentView(View):
-    """添加评论"""
+    """添加评论
+    """
 
     @classmethod
     def post(cls, request):

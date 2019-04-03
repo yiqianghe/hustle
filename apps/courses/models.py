@@ -62,6 +62,7 @@ class Video(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name="章节")
     name = models.CharField(max_length=100, verbose_name="视频名")
     url = models.CharField(max_length=300, verbose_name="视频地址", default="")
+    video_file = models.FileField(upload_to='courses/lecturer_upload/%Y/%m',verbose_name="教师上传视频", default="")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:

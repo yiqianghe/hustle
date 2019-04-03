@@ -6,11 +6,16 @@
     <div class="col-md-2">
         <ul class="nav" style="padding: 50px 0;font-size: 25px">
             <li style="font-weight: bolder;">
-                <a href="{% url 'users:users_center' %}">我的设置</a>
+                <a href="{% url 'users:user_info' %}">我的设置</a>
             </li>
             <li>
                 <a href="{% url 'users:users_fav' %}">我的收藏</a>
             </li>
+            {% if request.user.teacher_id %}
+            <li>
+                <a href="{% url 'users:lecturer_course' %}">讲师课程</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
     <div class="col-md-5" style='margin-top:50px'>
@@ -27,7 +32,7 @@
                                 <label for="account">账号</label>
                                 <input type="text" class="form-control" id="account" disabled="disabled" name='username' value="{{ request.user.username }}">
                             </div>
-                        <form role="form" method='POST' action="{% url 'users:users_center' %}">
+                        <form role="form" method='POST' action="{% url 'users:user_info' %}">
 
                             <div class="form-group">
                                 <label for="nick_name">昵称</label>

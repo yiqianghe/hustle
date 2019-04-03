@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}user_info{% endblock %}
+{% block custom_content %}
+<div class='row' style='margin-bottom:50px;margin-top: 50px;'>
+    <div class="col-md-2">
+        <ul class="nav" style="padding: 50px 0;font-size: 25px">
+            <li style="font-weight: bolder;">
+                <a href="{% url 'users:user_info' %}">我的设置</a>
+            </li>
+            <li>
+                <a href="{% url 'users:users_fav' %}">我的收藏</a>
+            </li>
+            <li>
+                <a href="">上传课程</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-4" style='margin-top:50px'>
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        上传视频
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form" id="VideoForm" method='POST' enctype="multipart/form-data" action="{% url 'users:image_upload' %}">
+                        <div class="form-group">
+                            <label for="image">头像</label>
+                            <img id='changeImage' src="{{ MEDIA_URL }}{{ request.user.image }}" class="img-circle" alt="Cinque Terre"
+                                width="150" height="150" style="padding: 10px">
+
+                            <input type="file" id="inputfile" name="video">
+                        </div>
+                        <button type="submit" class="btn btn-default">上传视频</button>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js %}
+<script>
+    $("#inputfile").change(function (e) {
+        for (var i = 0; i < e.target.files.length; i++) {
+            var file = e.target.files.item(i);
+            var freader = new FileReader();
+            freader.readAsDataURL(file);
+            freader.onload = function (e) {
+                var src = e.target.result;
+                $("#changeImage").attr("src", src);
+            }
+        }
+    });
+
+
+    $('#update_pwd').click(function(){
+        $.ajax({
+            cache: false,
+            type: "POST",
+            dataType:'json',
+            url:"{% url 'users:update_pwd' %}",
+            data:$('#PwdForm').serialize(),
+            async: true,
+            success: function(data) {
+                if (data.password) {
+                    alert(data.password);
+                } else if (data.confirm_password) {
+                    alert(data.confirm_password);
+                } else if (data.status == "success") {
+                    alert('修改密码成功，请重新登录!');
+                } else if (data.msg) {
+                    alert(data.msg);
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
