@@ -63,7 +63,7 @@
         $.ajax({
             cache: false,
             type: "POST",
-            url:"{% url 'courses:add_comment' %}",
+            url:"{% url 'operation:add_comment' %}",
             data:{'course_id':{{ course.id }}, 'comments': comments},
             async: true,
             beforeSend:function(xhr, settings){

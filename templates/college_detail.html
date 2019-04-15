@@ -6,7 +6,7 @@
                 <h1 style="color: #fff;">{{ college_org.name }}</h1>
                 <p style="color: #fff;">{{ lecturers_counts }}名讲师</p>
                 <p style="color: #fff;">{{ courses_counts }}门课程</p>
-                <button type="button" class="btn btn-primary btn-lg collectionbtn">{% if has_fav %}已{% endif %}收藏学院</button>
+                <button type="button" class="btn btn-primary btn-lg collectionbtn">{% if has_fav %}已{% endif %}收藏</button>
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
         $.ajax({
             cache: false,
             type: "POST",
-            url: "{% url 'colleges:add_fav' %}",
+            url: "{% url 'operation:add_fav' %}",
             data: {
                 'fav_id': fav_id,
                 'fav_type': fav_type

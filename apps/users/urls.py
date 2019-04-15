@@ -3,15 +3,15 @@ from users.views import UserInfoView,UploadImageView,UpdatePwdView,UserFavView,U
 app_name = 'users'
 
 urlpatterns = [
-    # 个人信息
+    # 获取/修改个人信息
     path('info/', UserInfoView.as_view(), name='user_info'),
-    # 头像上传
+    # 上传头像
     path('image/upload/', UploadImageView.as_view(), name='image_upload'),
     # 修改密码
     path('update/pwd/', UpdatePwdView.as_view(), name='update_pwd'),
-    # 用户收藏
+    # 获取用户收藏
     path('fav/', UserFavView.as_view(), name='users_fav'),
-    # 教师课程
+    # 获取教师课程
     path('lecturer_course/', UserLecturerCourseView.as_view(), name='lecturer_course'),
     # 教师新建课程
     path('create/course/', CreateCourseView.as_view(), name='create_course'),

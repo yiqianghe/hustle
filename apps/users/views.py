@@ -1,17 +1,20 @@
 from django.shortcuts import render,HttpResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.backends import ModelBackend
-from .models import UserProfile
+from django.urls import reverse
 from django.db.models import Q
 from django.views.generic.base import View
-from .forms import LoginForm,RegisterForm,UploadImageForm,ModifyPwdForm,UserInfoForm,UploadVideoForm,CreateCourseForm,CreateLessonForm
 from django.contrib.auth.hashers import make_password
+
+import json
+
+from utils.login_utils import LoginRequiredMixin
+from .forms import LoginForm,RegisterForm,UploadImageForm,ModifyPwdForm,UserInfoForm,UploadVideoForm,CreateCourseForm,CreateLessonForm
+
+from .models import UserProfile
+from operation.models import UserFavorite
 from colleges.models import CollegeOrg,Teacher
 from courses.models import Course,Lesson,Video
-from utils.login_utils import LoginRequiredMixin
-import json
-from django.urls import reverse
-from operation.models import UserFavorite
 # Create your views here.
 
 
@@ -187,7 +190,7 @@ class UpdatePwdView(View):
 
 
 class UserFavView(View):
-    """用户收藏
+    """获取用户收藏
     """
 
     @classmethod
@@ -339,6 +342,6 @@ def page_error(request):
     #全局500处理函数
 
     from django.shortcuts import render_to_response
-    response = render_to_response('404.html', {})
+    response = render_to_response('500.html', {})
     response.status_code = 500
     return response

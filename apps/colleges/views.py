@@ -1,10 +1,13 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render
 from django.views.generic import View
-from .models import CollegeOrg, Teacher
+from django.db.models import Q
+
 from pure_pagination import Paginator,PageNotAnInteger
+
+from .models import CollegeOrg, Teacher
 from courses.models import Course
 from operation.models import UserFavorite
-from django.db.models import Q
+
 # Create your views here.
 
 
@@ -84,35 +87,6 @@ class CollegeCourseView(View):
                       {
                           'course': course,
                       })
-
-
-class AddFavView(View):
-    """用户收藏
-    """
-
-    @classmethod
-    def post(cls, request):
-        fav_id = int(request.POST.get('fav_id', 0))
-        fav_type = int(request.POST.get('fav_type', 0))
-
-        if not request.user.is_authenticated:
-            # 判断用户登陆状态
-            return HttpResponse('{"status":"fail", "msg":"用户未登陆"}', content_type='application/json')
-
-        exist_records = UserFavorite.objects.filter(user=request.user, fav_id=fav_id, fav_type=fav_type)
-        if exist_records:
-            exist_records.delete()
-            return HttpResponse('{"status":"success", "msg":"收藏"}', content_type='application/json')
-        else:
-            user_fav = UserFavorite()
-            if fav_id > 0 and fav_type >0:
-                user_fav.user = request.user
-                user_fav.fav_id = fav_id
-                user_fav.fav_type = fav_type
-                user_fav.save()
-                return HttpResponse('{"status":"success", "msg":"已收藏"}', content_type='application/json')
-            else:
-                return HttpResponse('{"status":"fail", "msg":"收藏出错"}', content_type='application/json')
 
 
 class LecturerView(View):

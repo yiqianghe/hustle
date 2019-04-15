@@ -34,7 +34,7 @@
         <h3>&nbsp;免&nbsp;费&nbsp;课&nbsp;程&nbsp;</h3>
     </div>
     <div class="row">
-        {% for course in all_courses %}
+        {% for course in all_courses|slice:":4" %}
         <div class="col-sm-6 col-md-3">
             <div class="thumbnail">
                 <img class="img-responsive" src="{{ MEDIA_URL }}{{ course.image }}">
@@ -58,7 +58,7 @@
         <h3>&nbsp;讲&nbsp;师&nbsp;列&nbsp;表&nbsp;</h3>
     </div>
     <div class="row">
-        {% for lecturer in all_lecturers %}
+        {% for lecturer in all_lecturers|slice:":4" %}
         <div class="col-md-3 col-sm-6 col-xs-12">
             <div class="hovereffect">
                 <img class="img-responsive" src="{{ MEDIA_URL }}{{ lecturer.image }}" alt="">

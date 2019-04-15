@@ -1,9 +1,12 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render
 from django.views.generic import View
-from .models import Course
-from pure_pagination import Paginator,PageNotAnInteger
-from operation.models import CourseComments,UserFavorite
 from django.db.models import Q
+
+from pure_pagination import Paginator,PageNotAnInteger
+
+from .models import Course
+from operation.models import CourseComments,UserFavorite
+
 # Create your views here.
 
 
@@ -89,27 +92,4 @@ class CommentsView(View):
         })
 
 
-class AddCommentView(View):
-    """添加评论
-    """
-
-    @classmethod
-    def post(cls, request):
-
-        if not request.user.is_authenticated:
-            # 判断用户登陆状态
-            return HttpResponse('{"status":"fail", "msg":"用户未登陆"}', content_type='application/json')
-
-        course_id = int(request.POST.get('course_id', 0))
-        comments = request.POST.get('comments', '')
-        if course_id > 0 and comments:
-            course_comments = CourseComments()
-            course = Course.objects.get(id=course_id)
-            course_comments.user = request.user
-            course_comments.course = course
-            course_comments.comments = comments
-            course_comments.save()
-            return HttpResponse('{"status":"success", "msg":"评论成功"}', content_type='application/json')
-        else:
-            return HttpResponse('{"status":"fail", "msg":"评论失败"}', content_type='application/json')
 
